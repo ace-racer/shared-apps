@@ -12,15 +12,21 @@ def transform_mutual_fund_df(fund_df):
     print(fund_df.head(20))
     return fund_df
 
-def get_annualized_returns_for_fund(fund_df, years):
-    
+def filter_fund_df_by_date(fund_df, years):
     total_days = int(years * 365)
     today = datetime.today()
     x_days_early = timedelta(total_days)
     since_date = today - x_days_early
-
     fund_df = fund_df[fund_df.index >= since_date]
+    print('Dataframe after filter by date')
+    print(fund_df.head())
+    print(fund_df.tail())
+    return fund_df
 
+
+def get_annualized_returns_for_fund(fund_df, years):
+    
+    fund_df = filter_fund_df_by_date(fund_df, years)
     current_nav = fund_df.iloc[0]['nav']
     earliest_nav = fund_df.iloc[-1]['nav']
     
@@ -32,5 +38,17 @@ def get_annualized_returns_for_fund(fund_df, years):
     # Formula
     # https://www.investopedia.com/terms/a/annualized-total-return.asp#:~:text=Key%20Takeaways-,An%20annualized%20total%20return%20is%20the%20geometric%20average%20amount%20of,the%20annual%20return%20was%20compounded.
     cumulative_return = (current_nav - earliest_nav) / earliest_nav
+    total_days = int(years * 365)
     annualized_return = (1 + cumulative_return)**(365/total_days) - 1
     return round(annualized_return * 100, 2)
+
+def get_nav_metrics(fund_df, years):
+    fund_df = filter_fund_df_by_date(fund_df, years)
+    metrics = {}
+    metrics['mean'] = round(fund_df['nav'].mean(),2)
+    metrics['max'] = round(fund_df['nav'].max(), 2) 
+    metrics['min'] = round(fund_df['nav'].min(), 2)
+    metrics['var'] = round(fund_df['nav'].var(), 2)
+    metrics['standard deviation'] = round(fund_df['nav'].std(), 2)
+    metrics['median'] = round(fund_df['nav'].median())
+    return metrics

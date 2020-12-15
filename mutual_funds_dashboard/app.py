@@ -41,6 +41,8 @@ if fund_df is not None:
     st.text(f'Annualized 1 year return: {one_year_return}%. 3 year return: {three_year_return}% and 5 year return {five_year_return}%.')
 
     # Metrics - variance, SD, Min, max, average and median NAV values
+    metrics = utils.get_nav_metrics(fund_df, 3)
+    print(metrics)
 
 
 

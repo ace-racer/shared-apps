@@ -29,10 +29,16 @@ fund_df = india_mf_nav_obtainer.get_historical_nav_for_mf(fund_id)
 
 # Show the NAV values since inception
 if fund_df is not None:
+    st.subheader('NAV values')
     fund_df_transformed = utils.transform_mutual_fund_df(fund_df)
     st.line_chart(fund_df_transformed['nav'])
 
     # Returns for 1, 3 and 5 years
+    one_year_return = utils.get_annualized_returns_for_fund(fund_df, 1)
+    three_year_return = utils.get_annualized_returns_for_fund(fund_df, 3)
+    five_year_return = utils.get_annualized_returns_for_fund(fund_df, 5)
+
+    st.text(f'Annualized 1 year return: {one_year_return}%. 3 year return: {three_year_return}% and 5 year return {five_year_return}%.')
 
     # Metrics - variance, SD, Min, max, average and median NAV values
 

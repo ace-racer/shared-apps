@@ -7,7 +7,7 @@ from datetime import datetime
 import glob
 from fuzzywuzzy import fuzz, process
 
-STAGING_LOCATION = "data/"
+STAGING_LOCATION = os.path.join(os.getcwd(), 'data')
 
 if not os.path.exists(STAGING_LOCATION):
     os.makedirs(STAGING_LOCATION)
@@ -113,6 +113,7 @@ class IndiaMFNavObtainer:
         results = process.extract(search_text.lower(), self.funds_df['schemeName'], scorer=fuzz.token_set_ratio, limit=limit)
         fuzzy_df = pd.DataFrame(results, columns=['matched_text', 'score', 'idx'])
         merged_df = pd.merge(fuzzy_df, self.funds_df['schemeCode'], left_on='idx', right_index=True)
+        merged_df = merged_df.drop(columns='idx')
         return merged_df
 
 
